@@ -65,6 +65,7 @@ CREATE TABLE `customer_login_event` (
 
 CREATE TABLE `product` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(100) NOT NULL,
   `store_id` bigint(20) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` varchar(200) NOT NULL,
@@ -73,6 +74,7 @@ CREATE TABLE `product` (
   `updated_at` datetime NOT NULL,
   `version` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_product_uuid` (`uuid`),
   UNIQUE KEY `UK_product_name` (`name`)
 ) DEFAULT CHARSET=utf8;
 
