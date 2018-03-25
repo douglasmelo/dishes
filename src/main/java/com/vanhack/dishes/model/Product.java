@@ -1,11 +1,14 @@
 package com.vanhack.dishes.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.vanhack.dishes.model.response.ProductResponse;
@@ -22,6 +25,9 @@ public class Product extends DomainModel<Product> {
 	public static final String DESCRIPTION = "description";
 	public static final String PRICE = "price";
 	
+	@Column(nullable=false, unique=true)
+	private String uuid;
+	
 	@Column(nullable = false)
 	private Long storeId;
 	
@@ -36,6 +42,14 @@ public class Product extends DomainModel<Product> {
 
 	public Long getStoreId() {
 		return storeId;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public void setStoreId(Long storeId) {
@@ -65,6 +79,13 @@ public class Product extends DomainModel<Product> {
 	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
+	
+	@PrePersist
+	public void prePersist() {
+	    if (Objects.isNull(uuid)) {
+	        uuid = "PDT-" + UUID.randomUUID().toString();
+	    }
+	}
 
 	@Override
 	public int hashCode() {
@@ -74,6 +95,7 @@ public class Product extends DomainModel<Product> {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -106,11 +128,17 @@ public class Product extends DomainModel<Product> {
 				return false;
 		} else if (!storeId.equals(other.storeId))
 			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
+			return false;
 		return true;
 	}
 
 	public ProductResponse getProductResponse() {
 		return new ProductResponseBuilder(this)
+				.withUuid()
 				.withStoreId()
 				.withName()
 				.withDescription()
@@ -126,6 +154,11 @@ public class Product extends DomainModel<Product> {
 		public ProductResponseBuilder(Product product) {
 			this.product = product;
 			this.productResponse = new ProductResponse();
+		}
+		
+		public ProductResponseBuilder withUuid() {
+			this.productResponse.setProductId(product.getUuid());
+			return this;
 		}
 		
 		public ProductResponseBuilder withStoreId() {
