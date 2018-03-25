@@ -61,7 +61,6 @@ public class OrderController extends BaseRestController {
 	}
 	
 	@ApiOperation(value = "Cancel Order")
-	@org.springframework.web.bind.annotation.ResponseStatus(value = HttpStatus.CREATED)
 	@PutMapping(value = "/{orderId}/cancel", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> cancel(
 			@RequestHeader(value = "Accept-Language", required = false) String language,
