@@ -20,7 +20,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Order extends DomainModel<Order> {
 
@@ -33,13 +33,6 @@ public class Order extends DomainModel<Order> {
 	@JoinColumn(name = "customer_id", referencedColumnName = "id")
 	private Customer customer;
 	
-//	@Column
-//	private Long customerId;
-	
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "address_id", referencedColumnName = "id")
-//	private Address address;
-	
 	@Column(nullable = false)
 	private String deliveryAddress;
 	
@@ -47,7 +40,7 @@ public class Order extends DomainModel<Order> {
 	private String contact;
 	
 	@Column(nullable = false)
-	private Long StoreId;
+	private Long storeId;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order", targetEntity = OrderItem.class, fetch = FetchType.EAGER)
 	private Collection<OrderItem> items;
@@ -99,11 +92,11 @@ public class Order extends DomainModel<Order> {
 	}
 
 	public Long getStoreId() {
-		return StoreId;
+		return storeId;
 	}
 
 	public void setStoreId(Long storeId) {
-		StoreId = storeId;
+		this.storeId = storeId;
 	}
 
 	public Collection<OrderItem> getItems() {
@@ -134,12 +127,12 @@ public class Order extends DomainModel<Order> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((StoreId == null) ? 0 : StoreId.hashCode());
 		result = prime * result + ((contact == null) ? 0 : contact.hashCode());
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + ((items == null) ? 0 : items.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((storeId == null) ? 0 : storeId.hashCode());
 		result = prime * result + ((total == null) ? 0 : total.hashCode());
 		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
@@ -154,11 +147,6 @@ public class Order extends DomainModel<Order> {
 		if (getClass() != obj.getClass())
 			return false;
 		Order other = (Order) obj;
-		if (StoreId == null) {
-			if (other.StoreId != null)
-				return false;
-		} else if (!StoreId.equals(other.StoreId))
-			return false;
 		if (contact == null) {
 			if (other.contact != null)
 				return false;
@@ -180,6 +168,11 @@ public class Order extends DomainModel<Order> {
 		} else if (!items.equals(other.items))
 			return false;
 		if (status != other.status)
+			return false;
+		if (storeId == null) {
+			if (other.storeId != null)
+				return false;
+		} else if (!storeId.equals(other.storeId))
 			return false;
 		if (total == null) {
 			if (other.total != null)
