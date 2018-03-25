@@ -6,4 +6,5 @@ import com.vanhack.dishes.model.Customer;
 
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
+	Customer findByUuid(String uuid);
 }
