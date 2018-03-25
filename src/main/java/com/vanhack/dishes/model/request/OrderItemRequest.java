@@ -35,5 +35,37 @@ public class OrderItemRequest extends Request {
 	@JsonProperty
 	private BigDecimal total;
 
+	public ProductRequest getProduct() {
+		return product;
+	}
+
+	public void setProduct(ProductRequest product) {
+		this.product = product;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public BigDecimal getTotal() {
+		return total;
+	}
+
+	public void setTotal(BigDecimal total) {
+		this.total = total;
+	}
+
 	public interface Save { }
 }
