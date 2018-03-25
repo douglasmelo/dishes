@@ -7,4 +7,5 @@ import com.vanhack.dishes.model.Product;
 
 public interface ProductRepository extends CrudRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
+	Product findByUuid(String uuid);
 }

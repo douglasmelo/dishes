@@ -7,6 +7,8 @@ import com.vanhack.dishes.model.ResponseStatus;
 
 public class ProductResponse extends ResponseDetail {
 	
+	private String productId;
+	
 	private Long storeId;
 	
 	private String name;
@@ -14,6 +16,14 @@ public class ProductResponse extends ResponseDetail {
 	private String description;
 	
 	private BigDecimal price;
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
 
 	public Long getStoreId() {
 		return storeId;
