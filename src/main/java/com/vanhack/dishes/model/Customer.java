@@ -1,9 +1,13 @@
 package com.vanhack.dishes.model;
 
+import java.util.Objects;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.vanhack.dishes.utils.Passwords;
@@ -14,6 +18,9 @@ import com.vanhack.dishes.utils.Passwords;
 public class Customer extends DomainModel<Customer> {
 
 	private static final long serialVersionUID = -6092990237358483787L;
+	
+	@Column(name = "uuid", unique = true)
+	private String uuid;
 	
 	@Column(nullable=false)
 	private String email;
@@ -57,6 +64,13 @@ public class Customer extends DomainModel<Customer> {
 
 	public void setPassword(String password) {
 		this.password = Passwords.encode(password);
+	}
+	
+	@PrePersist
+	public void prePersist() {
+	    if (Objects.isNull(uuid)) {
+	        uuid = "CUS-" + UUID.randomUUID().toString();
+	    }
 	}
 
 	@Override
