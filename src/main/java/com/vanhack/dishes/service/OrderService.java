@@ -6,6 +6,6 @@ public interface OrderService {
 
 	void save(OrderRequest request);
 
-	void cancel(Long orderId);
+	void cancel(String orderId);
 
 }

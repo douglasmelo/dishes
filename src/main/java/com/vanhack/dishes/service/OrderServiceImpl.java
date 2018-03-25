@@ -30,7 +30,9 @@ public class OrderServiceImpl implements OrderService{
 		LOGGER.info("Begin method save for order {}", request);
 
 		//TODO: Send to RabbitMQ
-		Order order = OrderBuilder.New(request, customerRepository, productRepository).build();
+		Order order = OrderBuilder
+				.New(request, customerRepository, productRepository)
+				.build();
 		Order persistedOrder = orderRepository.save(order);
 
 		LOGGER.info("Finish method save for order {}", persistedOrder);
@@ -38,10 +40,10 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
-	public void cancel(Long orderId) {
+	public void cancel(String orderId) {
 		LOGGER.info("Begin method cancel for order {}", orderId);
 		
-		Order order = orderRepository.findOne(orderId);
+		Order order = orderRepository.findByUuid(orderId);
 		
 		order.setStatus(OrderStatus.CANCELED);
 		
