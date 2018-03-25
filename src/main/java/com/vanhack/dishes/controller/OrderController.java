@@ -65,7 +65,7 @@ public class OrderController extends BaseRestController {
 	@PutMapping(value = "/{orderId}/cancel", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> cancel(
 			@RequestHeader(value = "Accept-Language", required = false) String language,
-			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") Long orderId){
+			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") String orderId){
 
 		String method = "Cancel oder";
 
