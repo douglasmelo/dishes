@@ -2,7 +2,6 @@ package com.vanhack.dishes.model.request;
 
 import java.math.BigDecimal;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,10 +14,10 @@ public class OrderItemRequest extends Request {
 
 	private static final long serialVersionUID = 3804917520260451148L;
 	
+	@NotNull(message = "invalid.orderItem.product.id", groups = {Save.class})
 	@ApiModelProperty(required = false, position = 1)
-	@Valid
 	@JsonProperty
-	private ProductRequest product;
+	private String productId;
 
 	@NotNull(message = "invalid.orderItem.price", groups = {Save.class})
 	@ApiModelProperty(required = true, example = "10.48", position = 2)
@@ -35,12 +34,12 @@ public class OrderItemRequest extends Request {
 	@JsonProperty
 	private BigDecimal total;
 
-	public ProductRequest getProduct() {
-		return product;
+	public String getProductId() {
+		return productId;
 	}
 
-	public void setProduct(ProductRequest product) {
-		this.product = product;
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 	public BigDecimal getPrice() {
