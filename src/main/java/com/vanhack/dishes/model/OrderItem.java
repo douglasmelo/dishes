@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.vanhack.dishes.utils.ToStringBuilder;
+
 @Entity
 @Table(name = "order_item")
 public class OrderItem extends DomainModel<OrderItem>{
@@ -30,6 +32,14 @@ public class OrderItem extends DomainModel<OrderItem>{
 	
 	@Column(nullable = false)
 	private BigDecimal total;
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 
 	public Order getOrder() {
 		return order;
@@ -67,7 +77,6 @@ public class OrderItem extends DomainModel<OrderItem>{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((order == null) ? 0 : order.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
@@ -84,11 +93,6 @@ public class OrderItem extends DomainModel<OrderItem>{
 		if (getClass() != obj.getClass())
 			return false;
 		OrderItem other = (OrderItem) obj;
-		if (order == null) {
-			if (other.order != null)
-				return false;
-		} else if (!order.equals(other.order))
-			return false;
 		if (price == null) {
 			if (other.price != null)
 				return false;
@@ -110,6 +114,11 @@ public class OrderItem extends DomainModel<OrderItem>{
 		} else if (!total.equals(other.total))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.toString(this, "order");
 	}
 
 }
