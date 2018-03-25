@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,12 +31,12 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Api(tags = { "Order" })
-@RequestMapping("/api/v1/Order")
+@RequestMapping("/api/v1/order")
 public class OrderController extends BaseRestController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 	
-	private OrderService orderService;
+	@Autowired private OrderService orderService;
 
 	@ApiOperation(value = "Create Order")
 	@org.springframework.web.bind.annotation.ResponseStatus(value = HttpStatus.CREATED)
