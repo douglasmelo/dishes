@@ -1,4 +1,4 @@
-CREATE TABLE `order` (
+CREATE TABLE `orders` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(100) NOT NULL,
   `customer_id` bigint(20) NOT NULL,
@@ -30,12 +30,13 @@ CREATE TABLE `order_item` (
   `version` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_items_order_id` (`order_id`),
-  CONSTRAINT `FK_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
+  CONSTRAINT `FK_items_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 ) DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `customer` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `name` varchar(200) NOT NULL,
   `address` varchar(200) NOT NULL,
@@ -44,6 +45,7 @@ CREATE TABLE `customer` (
   `updated_at` datetime NOT NULL,
   `version` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK_customer_uuid` (`uuid`),
   UNIQUE KEY `UK_customer_email` (`email`)
 ) DEFAULT CHARSET=utf8;
 
