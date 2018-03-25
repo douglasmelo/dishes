@@ -20,7 +20,7 @@ public class OrderRequest extends Request {
 	@NotNull(message = "invalid.order.customerUuid", groups = {Save.class})
 	@ApiModelProperty(required = true, example = "CUS-be8fc1cf-c725-4d4f-ab94-5943a6e763da", position = 1)
 	@JsonProperty
-	private String customerUuid;
+	private String customerId;
 	 
 	@NotNull(message = "invalid.order.deliveryAddress", groups = {Save.class})
 	@ApiModelProperty(required = true, example = "2991 Pembina Hwy, Winnipeg, Manitoba R3T 2H5, Canada", position = 2)
@@ -35,7 +35,7 @@ public class OrderRequest extends Request {
 	@NotNull(message = "invalid.order.storeId", groups = {Save.class})
 	@ApiModelProperty(required = true, example = "1", position = 4)
 	@JsonProperty
-	private Long StoreId;
+	private Long storeId;
 	
 	@ApiModelProperty(required = false, position = 5)
 	@Valid
@@ -48,12 +48,16 @@ public class OrderRequest extends Request {
 	@JsonProperty
 	private BigDecimal total;
 	
-	public String getCustomerUuid() {
-		return customerUuid;
+	public OrderRequest() {
+		
+	}
+	
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setCustomerUuid(String customerUuid) {
-		this.customerUuid = customerUuid;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
 	public String getDeliveryAddress() {
@@ -73,11 +77,11 @@ public class OrderRequest extends Request {
 	}
 
 	public Long getStoreId() {
-		return StoreId;
+		return storeId;
 	}
 
 	public void setStoreId(Long storeId) {
-		StoreId = storeId;
+		this.storeId = storeId;
 	}
 
 	public List<OrderItemRequest> getOrderItems() {
