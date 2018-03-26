@@ -1,5 +1,6 @@
 package com.vanhack.dishes.service;
 
+import com.vanhack.dishes.model.Order;
 import com.vanhack.dishes.model.request.OrderRequest;
 
 public interface OrderService {
@@ -7,5 +8,7 @@ public interface OrderService {
 	void save(OrderRequest request);
 
 	void cancel(String orderId);
+
+	Order inquire(String orderId);
 
 }

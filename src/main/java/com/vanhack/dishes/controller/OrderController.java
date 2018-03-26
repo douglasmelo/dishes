@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vanhack.dishes.model.Order;
 import com.vanhack.dishes.model.ResponseDetail;
 import com.vanhack.dishes.model.ResponseStatus;
 import com.vanhack.dishes.model.request.OrderRequest;
+import com.vanhack.dishes.model.response.OrderInquireResponse;
 import com.vanhack.dishes.service.OrderService;
 import com.vanhack.dishes.utils.Locales;
 
@@ -75,6 +78,27 @@ public class OrderController extends BaseRestController {
 		try {
 			orderService.cancel(orderId);
 			return new ResponseEntity<ResponseDetail>(new ResponseDetail(ResponseStatus.SUCCESS), HttpStatus.OK);
+		}catch (Exception e) {
+			return internalError(e, locale);
+		}
+	}
+	
+	@ApiOperation(value = "Status Order")
+	@GetMapping(value = "/{orderId}/status", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
+	public ResponseEntity<? extends ResponseDetail> status(
+			@RequestHeader(value = "Accept-Language", required = false) String language,
+			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") String orderId){
+		
+		String method = "Status oder";
+		
+		LOGGER.info("{} Request: {}", method, orderId);
+		
+		Locale locale = Locales.getLocale(language);
+		
+		try {
+			Order order = orderService.inquire(orderId);
+			OrderInquireResponse response = new OrderInquireResponse(ResponseStatus.SUCCESS, order);
+			return new ResponseEntity<ResponseDetail>(response, HttpStatus.OK);
 		}catch (Exception e) {
 			return internalError(e, locale);
 		}

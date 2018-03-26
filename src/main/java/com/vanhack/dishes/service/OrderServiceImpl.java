@@ -53,4 +53,14 @@ public class OrderServiceImpl implements OrderService{
 		
 	}
 
+	@Override
+	public Order inquire(String orderId) {
+		LOGGER.info("Begin method inquire for order {}", orderId);
+		
+		Order order = orderRepository.findByUuid(orderId);
+		
+		LOGGER.info("Finish method inquire for order {}", orderId);
+		return order;
+	}
+
 }
