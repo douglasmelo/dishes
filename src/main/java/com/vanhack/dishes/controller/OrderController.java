@@ -69,7 +69,7 @@ public class OrderController extends BaseRestController {
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") String orderId){
 
-		String method = "Cancel oder";
+		String method = "Cancel order";
 
 		LOGGER.info("{} Request: {}", method, orderId);
 
@@ -89,7 +89,7 @@ public class OrderController extends BaseRestController {
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") String orderId){
 		
-		String method = "Status oder";
+		String method = "Status order";
 		
 		LOGGER.info("{} Request: {}", method, orderId);
 		
