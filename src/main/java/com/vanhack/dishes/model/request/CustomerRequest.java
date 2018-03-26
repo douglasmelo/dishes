@@ -11,7 +11,7 @@ public class CustomerRequest extends Request {
 	private static final long serialVersionUID = -1667909425363718813L;
 	
 	@ApiModelProperty(required = true, example = "jorge@gmail.com", position = 1)
-	@NotBlank(message = "customer.email.not.blank", groups = {Save.class})
+	@NotBlank(message = "customer.email.not.blank", groups = {Save.class, Auth.class})
 	@JsonProperty
 	private String email;
 
@@ -26,7 +26,7 @@ public class CustomerRequest extends Request {
 	private String address;
 	
 	@ApiModelProperty(required = false, example = "Jorge", position = 4)
-	@NotBlank(message = "customer.password.not.blank", groups = {Save.class})
+	@NotBlank(message = "customer.password.not.blank", groups = {Save.class, Auth.class})
 	@JsonProperty
 	private String password;
 	
@@ -63,4 +63,6 @@ public class CustomerRequest extends Request {
 	}
 
 	public interface Save { }
+	
+	public interface Auth { }
 }

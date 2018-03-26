@@ -23,7 +23,7 @@ public class CustomerLoginEventServiceImpl implements CustomerLoginEventService 
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
 	public void logoutAll(Customer customer) {
-		Collection<CustomerLoginEvent> events = customerLoginEventRepository.findByCustomerAndLoggedTrue(customer);
+		Collection<CustomerLoginEvent> events = customerLoginEventRepository.findByCustomerEmailAndLoggedTrue(customer.getEmail());
 		for (CustomerLoginEvent customerLoginEvent : events) {
 			logout(customerLoginEvent);
 		}

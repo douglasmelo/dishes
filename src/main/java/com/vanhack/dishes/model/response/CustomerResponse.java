@@ -11,6 +11,10 @@ public class CustomerResponse extends ResponseDetail {
 		super();
 	}
 	
+	public CustomerResponse(ResponseStatus responseStatus) {
+		super(responseStatus);
+	}
+	
 	public CustomerResponse(ResponseStatus responseStatus, String token) {
 		super(responseStatus);
 		this.token = token;

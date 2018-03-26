@@ -48,10 +48,33 @@ public class CustomerController extends BaseRestController {
 		Locale locale = Locales.getLocale(language);
 		
 		try {
-			String token = customerService.save(request);
-			CustomerResponse response = new CustomerResponse(ResponseStatus.SUCCESS, token);
+			customerService.save(request);
+			CustomerResponse response = new CustomerResponse(ResponseStatus.SUCCESS);
 			LOGGER.info("{} Response: {}", method, response.toString());
 			return new ResponseEntity<CustomerResponse>(response, HttpStatus.CREATED);
+		} catch(Exception e) {
+			return internalError(e, locale);
+		}
+	}
+	
+	@ApiOperation(value = "Customer Auth")
+	@PostMapping(value= "/auth", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
+	public ResponseEntity<? extends ResponseDetail> auth(
+			@RequestHeader(value = "Accept-Language", required = false) String language,
+			@RequestBody @Validated({CustomerRequest.Auth.class}) CustomerRequest request,
+			BindingResult result) {
+		
+		String method = "Customer Auth";
+		
+		LOGGER.info("{} Request: {}", method, request.toString());
+		
+		Locale locale = Locales.getLocale(language);
+		
+		try {
+			String token = customerService.auth(request);
+			CustomerResponse response = new CustomerResponse(ResponseStatus.SUCCESS, token);
+			LOGGER.info("{} Response: {}", method, response.toString());
+			return new ResponseEntity<CustomerResponse>(response, HttpStatus.OK);
 		} catch(Exception e) {
 			return internalError(e, locale);
 		}
