@@ -1,9 +1,17 @@
 package com.vanhack.dishes.model;
 
+import com.vanhack.dishes.exception.CustomerNotFoundException;
+import com.vanhack.dishes.exception.OrderNotFoundException;
+import com.vanhack.dishes.exception.ProductNameAlreadyExistsException;
+import com.vanhack.dishes.exception.ProductNotFoundException;
 
 public enum ResponseCode {
 	
-	INTERNAL_ERROR("internal.error", Exception.class);
+	INTERNAL_ERROR("internal.error", Exception.class),
+	PRODUCT_NAME_ALREADY_EXIST("product.name.already.exists", ProductNameAlreadyExistsException.class),
+	ORDER_NOT_FOUND("order.not.found", OrderNotFoundException.class),
+	PRODUCT_NOT_FOUND("product.not.found", ProductNotFoundException.class),
+	CUSTOMER_NOT_FOUND("customer.not.found", CustomerNotFoundException.class);
 
 	private String key;
 	private Class<? extends Exception> exception;

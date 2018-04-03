@@ -12,11 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.vanhack.dishes.builder.ProductBuilder;
+import com.vanhack.dishes.exception.ProductIntegrityViolationException;
+import com.vanhack.dishes.exception.ProductNameAlreadyExistsException;
 import com.vanhack.dishes.model.Product;
 import com.vanhack.dishes.model.request.ProductRequest;
 import com.vanhack.dishes.model.response.ProductSearchResponse;
 import com.vanhack.dishes.model.specification.ProductSpecification;
 import com.vanhack.dishes.repository.ProductRepository;
+import com.vanhack.dishes.repository.ProductRepositoryImpl;
 
 @Service
 public class ProductServiceImpl  implements ProductService{
@@ -24,15 +27,16 @@ public class ProductServiceImpl  implements ProductService{
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
 	
 	@Autowired ProductRepository productRepository;
+	@Autowired ProductRepositoryImpl productRepositoryImpl;
 	
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
-	public Product save(ProductRequest request) {
+	public Product save(ProductRequest request) throws ProductNameAlreadyExistsException, ProductIntegrityViolationException {
 		
 		LOGGER.info("Begin method save for product {}", request);
 		
 		Product product = ProductBuilder.New(request).build();
-		Product persistedProduct = productRepository.save(product);
+		Product persistedProduct = productRepositoryImpl.saveProduct(product);
 		
 		LOGGER.info("Finish method save for product {}", persistedProduct);
 		

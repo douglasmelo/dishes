@@ -1,11 +1,15 @@
 package com.vanhack.dishes.builder;
 
+import static java.util.Objects.isNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.vanhack.dishes.exception.CustomerNotFoundException;
+import com.vanhack.dishes.exception.ProductNotFoundException;
 import com.vanhack.dishes.model.Customer;
 import com.vanhack.dishes.model.Order;
 import com.vanhack.dishes.model.OrderItem;
@@ -32,7 +36,7 @@ public class OrderBuilder {
 		return new OrderBuilder(orderRequest, customerRepository, productRepository);
 	}
 	
-	public Order build() {
+	public Order build() throws CustomerNotFoundException {
 		Order order = new Order();
 		
 		order.setContact(orderRequest.getContact());
@@ -64,12 +68,20 @@ public class OrderBuilder {
 			.orElse(new ArrayList<>(0));
 	}
 
-	private Product buildProduct(String productId) {
-		return productRepository.findByUuid(productId);
+	private Product buildProduct(String productId) throws ProductNotFoundException {
+		Product product = productRepository.findByUuid(productId);
+		if(isNull(product)) {
+			throw new ProductNotFoundException();
+		}
+		return product;
 	}
 
-	private Customer getCustomer() {
-		return customerRepository.findByUuid(orderRequest.getCustomerId());
+	private Customer getCustomer() throws CustomerNotFoundException {
+		Customer customer = customerRepository.findByUuid(orderRequest.getCustomerId());
+		if(isNull(customer)){
+			throw new CustomerNotFoundException();
+		}
+		return customer;
 	}
 	
 }

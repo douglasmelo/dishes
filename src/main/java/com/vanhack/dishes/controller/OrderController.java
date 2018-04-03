@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vanhack.dishes.exception.CustomerNotFoundException;
+import com.vanhack.dishes.exception.OrderNotFoundException;
+import com.vanhack.dishes.exception.ProductNotFoundException;
 import com.vanhack.dishes.model.Order;
+import com.vanhack.dishes.model.ResponseCode;
 import com.vanhack.dishes.model.ResponseDetail;
 import com.vanhack.dishes.model.ResponseStatus;
 import com.vanhack.dishes.model.request.OrderRequest;
@@ -45,6 +49,7 @@ public class OrderController extends BaseRestController {
 	@org.springframework.web.bind.annotation.ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> create(
+			@RequestHeader(value = "Authorization", required = false) String authorization,
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@RequestBody @Validated({OrderRequest.Save.class}) OrderRequest request,
 			BindingResult result) throws Exception {
@@ -58,7 +63,11 @@ public class OrderController extends BaseRestController {
 		try {
 			orderService.save(request);
 			return new ResponseEntity<ResponseDetail>(new ResponseDetail(ResponseStatus.SUCCESS), HttpStatus.CREATED);
-		}catch (Exception e) {
+		} catch(ProductNotFoundException e) { 
+			return handleError(e, ResponseCode.PRODUCT_NOT_FOUND, method, HttpStatus.NOT_FOUND, locale);
+		} catch(CustomerNotFoundException e) { 
+			return handleError(e, ResponseCode.CUSTOMER_NOT_FOUND, method, HttpStatus.NOT_FOUND, locale);
+		} catch (Exception e) {
 			return internalError(e, locale);
 		}
 	}
@@ -66,6 +75,7 @@ public class OrderController extends BaseRestController {
 	@ApiOperation(value = "Cancel Order")
 	@PutMapping(value = "/{orderId}/cancel", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> cancel(
+			@RequestHeader(value = "Authorization", required = false) String authorization,
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") String orderId){
 
@@ -78,14 +88,17 @@ public class OrderController extends BaseRestController {
 		try {
 			orderService.cancel(orderId);
 			return new ResponseEntity<ResponseDetail>(new ResponseDetail(ResponseStatus.SUCCESS), HttpStatus.OK);
-		}catch (Exception e) {
+		} catch(OrderNotFoundException e) {
+			return handleError(e, ResponseCode.ORDER_NOT_FOUND, method, HttpStatus.NOT_FOUND, locale);
+		} catch (Exception e) {
 			return internalError(e, locale);
 		}
 	}
 	
 	@ApiOperation(value = "Status Order")
-	@GetMapping(value = "/{orderId}/status", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
+	@GetMapping(value = "/{orderId}/status", produces = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> status(
+			@RequestHeader(value = "Authorization", required = false) String authorization,
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@NotNull(message = "invalid.order.id") @NotEmpty(message = "invalid.order.id") @PathVariable(value = "orderId") String orderId){
 		
@@ -99,7 +112,9 @@ public class OrderController extends BaseRestController {
 			Order order = orderService.inquire(orderId);
 			OrderInquireResponse response = new OrderInquireResponse(ResponseStatus.SUCCESS, order);
 			return new ResponseEntity<ResponseDetail>(response, HttpStatus.OK);
-		}catch (Exception e) {
+		} catch(OrderNotFoundException e) {
+			return handleError(e, ResponseCode.ORDER_NOT_FOUND, method, HttpStatus.NOT_FOUND, locale);
+		} catch (Exception e) {
 			return internalError(e, locale);
 		}
 	}

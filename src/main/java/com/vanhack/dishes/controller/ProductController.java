@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vanhack.dishes.exception.ProductNameAlreadyExistsException;
+import com.vanhack.dishes.model.ResponseCode;
 import com.vanhack.dishes.model.ResponseDetail;
 import com.vanhack.dishes.model.ResponseStatus;
 import com.vanhack.dishes.model.request.ProductRequest;
@@ -44,6 +46,7 @@ public class ProductController extends BaseRestController {
 	@ApiOperation(value = "Create Product")
 	@PostMapping(produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> create(
+			@RequestHeader(value = "Authorization", required = false) String authorization,
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@RequestBody @Validated({ProductRequest.Save.class}) ProductRequest request,
 			BindingResult result) {
@@ -59,6 +62,8 @@ public class ProductController extends BaseRestController {
 			ProductResponse response = new ProductResponse(ResponseStatus.SUCCESS);
 			LOGGER.info("{} Response: {}", method, response.toString());
 			return new ResponseEntity<ProductResponse>(response, HttpStatus.CREATED);
+		} catch (ProductNameAlreadyExistsException e) {
+			return handleError(e, ResponseCode.PRODUCT_NAME_ALREADY_EXIST, method, HttpStatus.BAD_REQUEST, locale);
 		} catch(Exception e) {
 			return internalError(e, locale);
 		}
@@ -66,6 +71,7 @@ public class ProductController extends BaseRestController {
 	
 	@GetMapping(produces = APPLICATION_JSON)
 	public ResponseEntity<? extends ResponseDetail> getProducts(
+			@RequestHeader(value = "Authorization", required = false) String authorization,
 			@RequestHeader(value = "Accept-Language", required = false) String language,
 			@RequestParam(value="storeId", required = false) Long storeId,
 			@RequestParam(value="name", required = false) String name,

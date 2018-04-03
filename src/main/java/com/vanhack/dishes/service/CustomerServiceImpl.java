@@ -1,11 +1,13 @@
 package com.vanhack.dishes.service;
 
 
-import java.util.Base64;
+import java.time.LocalDateTime;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import com.vanhack.dishes.model.Customer;
 import com.vanhack.dishes.model.CustomerLoginEvent;
 import com.vanhack.dishes.model.request.CustomerRequest;
 import com.vanhack.dishes.repository.CustomerRepository;
+import com.vanhack.dishes.security.TokenAuthenticationService;
 import com.vanhack.dishes.utils.Passwords;
 
 @Service
@@ -21,8 +24,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
 	
+	@Autowired Environment env;
 	@Autowired CustomerRepository customerRepository;
 	@Autowired CustomerLoginEventService customerLoginEventService;
+	@Autowired TokenAuthenticationService tokenAuthenticationService;
 	
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
@@ -45,14 +50,13 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		String token = null;
 		if(Passwords.matches(request.getPassword(), customer.getPassword())) {
-			StringBuffer sb = new StringBuffer();
-			sb.append(customer.getEmail());
-			sb.append(customer.getPassword());
-			token = Base64.getEncoder().encodeToString(sb.toString().getBytes());
-			
+			LocalDateTime validAt = LocalDateTime.now();
+			validAt = validAt.plusDays(TokenAuthenticationService.EXPIRATION_TIME_IN_DAYS);
+			String jwt = tokenAuthenticationService.getTokenAuthentication(customer.getEmail(), validAt);
+			token = TokenAuthenticationService.TOKEN_PREFIX + StringUtils.SPACE + jwt;
 			customerLoginEventService.logoutAll(customer);
 			
-			CustomerLoginEvent event = new CustomerLoginEvent(customer, token);
+			CustomerLoginEvent event = new CustomerLoginEvent(customer, token, validAt);
 			customerLoginEventService.save(event);
 		}else {
 			throw new Exception("E-mail or password incorrect");

@@ -26,15 +26,19 @@ public class CustomerLoginEvent extends DomainModel<CustomerLoginEvent> {
 	@Column
 	private LocalDateTime logOutDate;
 	
+	@Column
+	private LocalDateTime validAt;
+	
 	@Column(nullable = false)
 	private Boolean logged;
 	
 	public CustomerLoginEvent() {}
 	
-	public CustomerLoginEvent(Customer customer, String token) {
+	public CustomerLoginEvent(Customer customer, String token, LocalDateTime validAt) {
 		setCustomer(customer);
 		setToken(token);
 		setLogged(Boolean.TRUE);
+		setValidAt(validAt);
 	}
 
 	public Customer getCustomer() {
@@ -51,6 +55,14 @@ public class CustomerLoginEvent extends DomainModel<CustomerLoginEvent> {
 
 	public void setLogOutDate(LocalDateTime logOutDate) {
 		this.logOutDate = logOutDate;
+	}
+
+	public LocalDateTime getValidAt() {
+		return validAt;
+	}
+
+	public void setValidAt(LocalDateTime validAt) {
+		this.validAt = validAt;
 	}
 
 	public Boolean isLogged() {

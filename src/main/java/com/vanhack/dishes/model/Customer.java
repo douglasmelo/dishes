@@ -34,6 +34,14 @@ public class Customer extends DomainModel<Customer> {
 	@Column(nullable=false)
 	private String password;
 
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
 	public String getEmail() {
 		return email;
 	}

@@ -54,6 +54,7 @@ CREATE TABLE `customer_login_event` (
   `customer_id` bigint(20) NOT NULL,
   `token` varchar(255) NOT NULL,
   `log_out_date` datetime DEFAULT NULL,
+  `valid_at` datetime DEFAULT NULL,
   `logged` TINYINT(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,

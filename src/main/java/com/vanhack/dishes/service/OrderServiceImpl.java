@@ -1,5 +1,7 @@
 package com.vanhack.dishes.service;
 
+import static java.util.Objects.isNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.vanhack.dishes.builder.OrderBuilder;
+import com.vanhack.dishes.exception.CustomerNotFoundException;
+import com.vanhack.dishes.exception.OrderNotFoundException;
 import com.vanhack.dishes.model.Order;
 import com.vanhack.dishes.model.OrderStatus;
 import com.vanhack.dishes.model.request.OrderRequest;
@@ -25,7 +29,7 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
-	public void save(OrderRequest request) {
+	public void save(OrderRequest request) throws CustomerNotFoundException {
 
 		LOGGER.info("Begin method save for order {}", request);
 
@@ -40,10 +44,14 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
-	public void cancel(String orderId) {
+	public void cancel(String orderId) throws OrderNotFoundException {
 		LOGGER.info("Begin method cancel for order {}", orderId);
 		
 		Order order = orderRepository.findByUuid(orderId);
+		
+		if(isNull(order)) {
+			throw new OrderNotFoundException();
+		}
 		
 		order.setStatus(OrderStatus.CANCELED);
 		
@@ -54,10 +62,14 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public Order inquire(String orderId) {
+	public Order inquire(String orderId) throws OrderNotFoundException {
 		LOGGER.info("Begin method inquire for order {}", orderId);
 		
 		Order order = orderRepository.findByUuid(orderId);
+		
+		if(isNull(order)) {
+			throw new OrderNotFoundException();
+		}
 		
 		LOGGER.info("Finish method inquire for order {}", orderId);
 		return order;

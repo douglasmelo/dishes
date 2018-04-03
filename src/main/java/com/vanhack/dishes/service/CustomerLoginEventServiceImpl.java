@@ -1,7 +1,6 @@
 package com.vanhack.dishes.service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,8 @@ public class CustomerLoginEventServiceImpl implements CustomerLoginEventService 
 	@Override
 	@Transactional(rollbackFor = Throwable.class)
 	public void logoutAll(Customer customer) {
-		Collection<CustomerLoginEvent> events = customerLoginEventRepository.findByCustomerEmailAndLoggedTrue(customer.getEmail());
-		for (CustomerLoginEvent customerLoginEvent : events) {
-			logout(customerLoginEvent);
-		}
+		CustomerLoginEvent customerLoginEvent = customerLoginEventRepository.findByCustomerEmailAndLoggedTrue(customer.getEmail());
+		logout(customerLoginEvent);
 	}
 	
 	@Override
